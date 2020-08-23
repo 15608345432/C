@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>修改文章</title>
+    <link rel="stylesheet" href="../assets/libs/layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../assets/libs/layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-header"></div>
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" action="" method="post" id="addMeetForm">
+                    <div class="layui-form-item">
+                        <div class="layui-col-md12">
+                            <label class="layui-form-label">标题：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="id" lay-verify="title|required" autocomplete="off" placeholder="请输入标题"
+                                    class="layui-input">
+                                <input type="text" name="meetName" lay-verify="title|required" autocomplete="off"
+                                    placeholder="请输入标题" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-col-md12">
+                            <label class="layui-form-label">文章内容：</label>
+                            <div class="layui-input-block">
+                                <script id="article_content" type="text/plain" style="width:100%;height:400px;"></script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-layout-admin">
+                        <div class="layui-input-block">
+                            <div class="layui-footer" style="left: 0;">
+                                <button class="layui-btn" lay-submit='' lay-filter="form-submit">立即发布</button>
+
+                                <button type="reset" class="layui-btn layui-btn-primary">保存</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="../assets/libs/layuiadmin/layui/layui.js"></script>
+    <script type="text/javascript" src="../assets/libs/ueditor/1.4.3/ueditor.config.js"></script>
+    <script type="text/javascript" src="../assets/libs/ueditor/1.4.3/ueditor.all.min.js"> </script>
+    <script type="text/javascript" src="../assets/libs/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+        <script type="text/javascript" src="../assets/libs/config.js"></script>
+    <script>
+        layui.config({
+            base: '../assets/libs/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'table', 'sample', 'form'], function () {
+            var form = layui.form
+            ,layer = layui.layer
+            ,$ = layui.$;
+            var link1 = serverName + "/index.php/admin/getArticle";
+            var link2 = serverName + "/index.php/admin/addArticle";
+            var link3 = serverName + "/index.php/admin/editArticle";
+            var link4 = serverName + "/index.php/admin/delArticle";
+            var table = layui.table;
+            form.on('submit(form-submit)', function (data) {
+                console.log(data);
+                $.ajax({
+                    url: link3,
+                    method: 'post',
+                    data: data.field,
+                    dataType: 'JSON',
+                    success: function (res) {
+                        // res.code = '200'
+                        if (res.code == 0) {
+                            layer.confirm('添加成功！', function (index) {
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                layer.close(index);
+                                parent.location.reload();
+                            })
+                            // parent.location.reload();//刷新父页面，注意一定要在关闭当前iframe层之前执行刷新
+                            // parent.layer.close(index); //再执行关闭
+                        }
+                    },
+                    error: function (res) {
+                        layer.alert('无法联通服务器错误代码:' + res.status + '错误描述:' + res.statusText);
+                    }
+                })
+                return false
+            })
+            var ue = UE.getEditor('article_content');
+        });
+
+
+    </script>
+</body>
+
+</html>

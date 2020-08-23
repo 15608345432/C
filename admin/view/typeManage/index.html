@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <title>文章类型管理</title> -->
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../assets/libs/layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../assets/libs/layuiadmin/style/admin.css" media="all">
+</head>
+
+<body>
+
+
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <!-- <div class="layui-card-header">文章类型管理</div> -->
+                    
+                    <div class="layui-card-body">
+                        <div class="layui-btn-group test-table-data-btn" style="margin-bottom: 10px;">
+                            <button class="layui-btn" data-type="addType">添加文章类型</button>
+                        </div>
+                        <!-- <table class="layui-hide" id="test-table-data" lay-filter="test-table-data"></table>
+                        <script type="text/html" id="test-table-data-manage">
+                                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                            </script> -->
+                    </div>
+                    <div id="test4" class="demo-tree"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/libs/layuiadmin/layui/layui.js"></script>
+        <script type="text/javascript" src="../assets/libs/config.js"></script>
+    <script>
+        layui.config({
+            base: '../assets/libs/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'tree','table'], function () {
+            var table = layui.table
+                , admin = layui.admin
+                 ,tree = layui.tree
+                , $ = layui.$;
+           var link1 = serverName + "/index.php/admin/getArticleSort";
+            var link2 = serverName + "/index.php/admin/addArticleSort";
+            var link3 = serverName + "/index.php/admin/editArticleSort";
+            var link4 = serverName + "/index.php/admin/delArticleSort";
+           
+            //手风琴模式
+            tree.render({
+                elem: '#test4'
+                
+                , data: [{
+                    title: '优秀'
+                    , spread: true
+                    , children: [{
+                        title: '80 ~ 90'
+                    }, {
+                        title: '90 ~ 100'
+                         , spread: true
+                        , children: [{
+                            
+                                title: '80 ~ 90'
+                                 
+                            }, {
+                                title: '90 ~ 100'
+                            }]
+                    }]
+                }, {
+                    title: '良好'
+                    , spread: true
+                    , children: [{
+                        title: '70 ~ 80'
+                    }, {
+                        title: '60 ~ 70'
+                    }]
+                }, {
+                    title: '要努力奥'
+                    , spread: true
+                    , children: [{
+                        title: '0 ~ 60'
+                    }]
+                }]
+                , accordion: true
+                , click: function (obj) {
+                    var data = obj.data;  //获取当前点击的节点数据
+                    layer.msg('状态：' + obj.state + '<br>节点数据：' + JSON.stringify(data.id));
+                     var url = './editArticleSort.html';
+
+                    layer.open({
+                        type: 2,
+                        title: "修改文章类型",
+                        shadeClose: false,
+                        move: false,
+                        area: ['800px', '500px'],
+                        content: [url]
+                    })
+                }
+            });
+
+            var active = {
+                addType: function () { //获取选中数据
+                    var url = './addArticleSort.html';
+                
+                    layer.open({
+                        type: 2,
+                        title: "添加文章类型",
+                        shadeClose: false,
+                        move: false,
+                        area: ['800px', '500px'],
+                        content: [url]
+                    })
+
+                },
+            };
+            $('.test-table-data-btn .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+
+                active[type] ? active[type].call(this) : '';
+            });
+        });
+    </script>
+</body>
+
+</html>

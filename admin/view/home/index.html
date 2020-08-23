@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=\, initial-scale=1.0">
+    <title>展示主页</title>
+    <link rel="stylesheet" href="../assets/libs/layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../assets/libs/layuiadmin/style/admin.css" media="all">
+</head>
+
+<body>
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+
+
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">快捷方式
+                        <span class="layui-badge layui-bg-blue layuiadmin-badge">技术支持：重庆市渝中区党政信息中心 |
+                            技术联系电话：63760177</span>
+                    </div>
+                    <div class="layui-card-body">
+
+                        <div class="layui-carousel layadmin-carousel layadmin-shortcut" lay-anim=""
+                            lay-indicator="inside" lay-arrow="none">
+                            <div carousel-item="">
+                                <ul class="layui-row layui-col-space10 layui-this">
+                                    <li class="layui-col-xs3">
+                                        <a lay-href="home/homepage1.html">
+                                            <i class="layui-icon layui-icon-console"></i>
+                                            <cite>添加会议种类</cite>
+                                        </a>
+                                    </li>
+                                    <li class="layui-col-xs3">
+                                        <a lay-href="home/homepage1.html">
+                                            <i class="layui-icon layui-icon-console"></i>
+                                            <cite>添加会议</cite>
+                                        </a>
+                                    </li>
+                                    <li class="layui-col-xs3">
+                                        <a lay-href="home/homepage2.html">
+                                            <i class="layui-icon layui-icon-chart"></i>
+                                            <cite>搜索文件</cite>
+                                        </a>
+                                    </li>
+                                    <li class="layui-col-xs3">
+                                        <a lay-href="component/layer/list.html">
+                                            <i class="layui-icon layui-icon-template-1"></i>
+                                            <cite>人员管理</cite>
+                                        </a>
+                                    </li>
+                                    <li class="layui-col-xs3">
+                                        <a layadmin-event="im">
+                                            <i class="layui-icon layui-icon-chat"></i>
+                                            <cite>平台使用说明书</cite>
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs6">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        会议总数
+                        <span class="layui-badge layui-bg-blue layuiadmin-badge">南纪门街道</span>
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+                        <p class="layuiadmin-big-font">20</p>
+                        <p>
+                            会议系统总登陆使用次数
+                            <span class="layuiadmin-span-color">200次 <i
+                                    class="layui-inline layui-icon layui-icon-flag"></i></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs6">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        附件数量
+                        <span class="layui-badge layui-bg-blue layuiadmin-badge">南纪门街道</span>
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+                        <p class="layuiadmin-big-font">300</p>
+                        <p>
+                            新下载
+                            <span class="layuiadmin-span-color">10% <i
+                                    class="layui-inline layui-icon layui-icon-face-smile-b"></i></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="layui-col-sm12">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        访问量
+                        <div class="layui-btn-group layuiadmin-btn-group">
+                            <a href="javascript:;" class="layui-btn layui-btn-primary layui-btn-xs">去年</a>
+                            <a href="javascript:;" class="layui-btn layui-btn-primary layui-btn-xs">今年</a>
+                        </div>
+                    </div>
+                    <div class="layui-card-body">
+                        <div class="layui-row">
+                            <div class="layui-col-sm8">
+
+                                <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade"
+                                    lay-filter="LAY-index-pagetwo">
+
+                                    <div carousel-item id="LAY-index-pagetwo">
+                                        <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-sm4">
+                                <div class="layuiadmin-card-list">
+                                    <p class="layuiadmin-normal-font">月访问数</p>
+                                    <span>同上期增长</span>
+                                    <div class="layui-progress layui-progress-big" lay-showPercent="yes">
+                                        <div class="layui-progress-bar" lay-percent="30%"></div>
+                                    </div>
+                                </div>
+                                <div class="layuiadmin-card-list">
+                                    <p class="layuiadmin-normal-font">月下载数</p>
+                                    <span>同上期增长</span>
+                                    <div class="layui-progress layui-progress-big" lay-showPercent="yes">
+                                        <div class="layui-progress-bar" lay-percent="20%"></div>
+                                    </div>
+                                </div>
+                                <div class="layuiadmin-card-list">
+                                    <p class="layuiadmin-normal-font">月收入</p>
+                                    <span>同上期增长</span>
+                                    <div class="layui-progress layui-progress-big" lay-showPercent="yes">
+                                        <div class="layui-progress-bar" lay-percent="25%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+    <script src="../assets/libs/layuiadmin/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '../assets/libs/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'sample']);
+    </script>
+</body>
+
+</html>

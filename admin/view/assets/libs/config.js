@@ -1,0 +1,1 @@
+var serverName = "http://localhost"

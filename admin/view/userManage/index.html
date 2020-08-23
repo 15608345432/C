@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人员管理</title>
+    <link rel="stylesheet" href="../assets/libs/layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../assets/libs/layuiadmin/style/admin.css" media="all">
+
+</head>
+
+<body>
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <!-- <div class="layui-card-header">人员管理</div> -->
+                    <div class="layui-card-body">
+                        <script type="text/html" id="user_lock">
+                           
+                            <input type="checkbox" name="user_lock" value="{{ d.id }}" title="冻结" lay-filter="user_lock" 
+                            {{ d.user_lock == 1 ? 'checked' : '' }}
+                            >
+                        </script>
+                        <script type="text/html" id="user_freeze">
+                                  
+                             <input type="checkbox" name="user_freeze" value="{{ d.id }}" title="锁定" lay-filter="user_freeze"
+                              {{ d.user_freeze == 1 ? 'checked' : '' }}
+                              >
+                        </script>
+
+                        <table class="layui-hide" id="test-table-data" lay-filter="test-table-data"></table>
+                        <script type="text/html" id="toolbarDemo">
+                            <div class="layui-btn-container">
+                                <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+                                <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+                                <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+                                <button class="layui-btn layui-btn-sm" data-type="addUser">添加人员</button>
+                            </div>
+                        </script>
+                        <script type="text/html" id="test-table-data-manage">
+                            <!-- <a class="layui-btn layui-btn-xs" lay-event="cz">重置密码</a> -->
+                        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../assets/libs/layuiadmin/layui/layui.js"></script>
+        <script type="text/javascript" src="../assets/libs/config.js"></script>
+    <script>
+        layui.config({
+            base: '../assets/libs/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'table',], function () {
+            var table = layui.table
+                // , admin = layui.admin
+                 , form=layui.form
+                , $ = layui.$;
+
+            var link1 = serverName + "/index.php/admin/getUserInfo";
+            var link2 = serverName + "/index.php/admin/addUserInfo";
+            var link3 = serverName + "/index.php/admin/editUserInfo";
+            var link4 = serverName + "/index.php/admin/delUserInfo";
+            //展示已知数据
+            table.render({
+                elem: '#test-table-data'
+                , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                    title: '提示'
+                    , layEvent: 'LAYTABLE_TIPS'
+                    , icon: 'layui-icon-tips'
+                }]
+                ,url:link1
+                , cols: [[ //标题栏
+                 { type: 'checkbox', fixed: 'left' }
+                    // ,{ field: 'id', title: 'ID', width: 80, sort: false }
+                    , { field: 'user_name', title: '姓名', minWidth: 120 }
+                    , { field: 'account', title: '用户名', minWidth: 120 }
+                    , { field: 'user_phone', title: '电话', width: 140 }
+                    
+                    , { field: 'user_lock', title: '是否锁定', width: 110, templet: '#user_lock', unresize: true }
+                    ,
+                     , { field: 'user_freeze', title: '是否冻结', width: 110, templet: '#user_freeze', unresize: true }
+                    , { title: '管理', width: 120, align: 'center', fixed: 'right', toolbar: '#test-table-data-manage' }
+
+                ]]
+                // , data: [
+                //     {
+                //         "id": "10001"
+                //         , "userType": "主任"
+                //         , "name": "赖良"
+                //         , "phone": "13629777761"
+                //         , "username": "lliang1"
+                //         , "isSeeZT": "可看"
+                //         , "loginTime": "2020-3-1 14:11:22"
+                //     },
+                    
+                // ]
+                // , skin: 'line' //表格风格
+                // , even: true
+                // , page: true //是否显示分页
+                // ,limits: [5, 7, 10]
+                //,limit: 5 //每页默认显示的数量
+            });
+           
+            form.on('checkbox(user_lock)', function (obj) {
+                // layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
+               
+                var data={"user_lock":0,"id": this.value};
+                if(obj.elem.checked){
+                    data.user_lock=1;
+                }else{
+                    data.user_lock=0;
+                }
+                // console.info(data);
+               $.ajax({
+                    url: link3,
+                    method: 'post',
+                    data: data,
+                    dataType: 'JSON',
+                    success: function (res) {
+                        if (res.code == 0) {
+                            layer.tips('成功！')
+                        }
+
+                    },
+                    error: function (res) {
+                        layer.alert('无法联通服务器错误代码:' + res.status + '错误描述:' + res.statusText);
+                    }
+
+                })
+
+            });
+            form.on('checkbox(user_freeze)', function (obj) {
+                // layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
+                var data={"user_freeze":0,"id": this.value};
+                if(obj.elem.checked){
+                    data.user_freeze=1;
+                }else{
+                    data.user_freeze=0;
+                }
+             $.ajax({
+                    url: link3,
+                    method: 'post',
+                    data: data,
+                    dataType: 'JSON',
+                    success: function (res) {
+                        if (res.code == 0) {
+                            console.log(res.data)
+                            layer.tips('成功！')
+                        }
+
+                    },
+                    error: function (res) {
+                        layer.alert('无法联通服务器错误代码:' + res.status + '错误描述:' + res.statusText);
+                    }
+
+                })
+            });
+            //头工具栏事件
+            table.on('toolbar(test-table-data)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'getCheckData':
+                        var data = checkStatus.data;
+                        layer.alert(JSON.stringify(data));
+                        break;
+                    case 'getCheckLength':
+                        var data = checkStatus.data;
+                        layer.msg('选中了：' + data.length + ' 个');
+                        break;
+                    case 'isAll':
+                        layer.msg(checkStatus.isAll ? '全选' : '未全选');
+                        break;
+
+                    //自定义头工具栏右侧图标 - 提示
+                    case 'LAYTABLE_TIPS':
+                        layer.alert('这是工具栏右侧自定义的一个图标按钮');
+                        break;
+                };
+            });
+            
+            //监听工具条
+            table.on('tool(test-table-data)', function (obj) {
+                var data = obj.data;
+                // console.log(data);
+                // console.log(obj)
+                if (obj.event === 'edit') {
+                    // layer.alert('跳到会议类型编辑页面id=' + data.id)
+                    var url = link3;
+                    var index = layer.open({
+                        type: 2,
+                        // title: name+'--状态详情',
+                        title: "编辑会议类型--" + data.name,
+                        shadeClose: false,
+                        move: false,
+                        area: ['800px', '500px'],
+                        content: [url]
+                    })
+                    layer.full(index);
+                } else if (obj.event === 'del') {
+                    layer.confirm('确定删除：' + data.name, function (index) {
+                        if (data.id !== null) {
+                            // console.log('------------' + data.id);
+                            $.ajax({
+                                url: link4,
+                                method: 'post',
+                                data: data,
+                                dataType: 'JSON',
+                                success: function (res) {
+                                    // res.code = '200'
+                                    if (res.code ==0 ) {
+
+                                        layer.confirm('删除成功！', function (index) {
+
+                                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                            // layer.close(index);
+                                            parent.location.reload();
+
+                                        })
+
+                                        // parent.location.reload();//刷新父页面，注意一定要在关闭当前iframe层之前执行刷新
+                                        // parent.layer.close(index); //再执行关闭
+                                    }
+
+                                },
+                                error: function (res) {
+                                    layer.alert('无法联通服务器错误代码:' + res.status + '错误描述:' + res.statusText);
+                                }
+
+                            })
+
+                        }
+                        // console.log(index)
+
+                        // obj.del();
+                        // layer.close(index);
+                    })
+
+                }
+
+            });
+
+            var active = {
+                addUser: function () { //获取选中数据
+                    var url = './addUser.html'
+                   var index =  layer.open({
+                        type: 2,
+                        title: "添加用户",
+                        shadeClose: false,
+                        shade: 0.8,
+                        move: false,
+                        area: ['800px', '500px'],
+                        maxmin: true,
+                        content: [url]
+                    })
+                    layer.full(index);
+                },
+            };
+            $('.layui-btn-container .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+
+        });
+    </script>
+</body>
+
+</html>

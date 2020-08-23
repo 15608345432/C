@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>文章管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../assets/libs/layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../assets/libs/layuiadmin/style/admin.css" media="all">
+</head>
+
+<body>
+
+<script type="text/html" id="checkboxTpl">
+  <!-- 这里的 checked 的状态只是演示 -->
+<input type="checkbox" name="lock" value="" title="推荐" lay-filter="lockDemo" >
+</script>
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header">文章管理</div>
+                    <div class="layui-card-body">
+                        
+                     
+                            
+
+                        
+                        <table class="layui-hide" id="test-table-data" lay-filter="test-table-data"></table>
+                        <script type="text/html" id="toolbarDemo">
+                        <div class="layui-btn-group test-table-data-btn" >  
+                        <button class="layui-btn layui-btn-sm" data-type="AddArticle">添加文章</button>
+                        </div>
+                        </script>
+                        <script type="text/html" id="test-table-data-manage">
+                            <a class="layui-btn layui-btn-xs" lay-event="see">预览</a>
+                                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                            </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/libs/layuiadmin/layui/layui.js"></script>
+    <script type="text/javascript" src="../assets/libs/config.js"></script>
+    <script>
+        layui.config({
+            base: '../assets/libs/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'table'], function () {
+            var table = layui.table
+                , admin = layui.admin
+                , form = layui.form
+                , $ = layui.$;
+
+                var link2=serverName+"/index.php/admin/getArticle";
+            //展示已知数据
+            table.render({
+                elem: '#test-table-data'
+                , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , defaultToolbar: ['filter', //'exports', 'print'
+                // , { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                //     title: '提示'
+                //     , layEvent: 'LAYTABLE_TIPS'
+                //     , icon: 'layui-icon-tips'
+                // }
+            ]
+            ,url:link2
+                , cols: [[ //标题栏
+                    // { field: 'id', title: 'ID', width: 80, sort: false }
+                     { field: 'title', title: '标题', minWidth: 250 }
+                    , { field: 'article_time', title: '发布时间', minWidth: 120 }
+                    , { field: 'article_ip', title: '发布ip', width: 120 }
+                    , { field: 'article_click', title: '查看人数', width: 110 }
+                    , { field: 'article_type', title: '是否公开', width: 110 }
+                    , { field: 'article_up', title: '是否置顶', width: 110 }
+                    // , { field: 'article_support', title: '是否推荐', width: 20 }
+                    , { field: 'article_support', title: '是否推荐', width: 110, templet: '#checkboxTpl', unresize: true }
+                    , { title: '管理', width: 160, align: 'center', fixed: 'right', toolbar: '#test-table-data-manage' }
+
+                ]]
+                ,
+                 data: [
+                    {
+                        // "title": "10031"
+                         "title": "南纪门街道党工委会" + " （第31次）"
+                        , "article_time": "2020.06.22 14:30"
+                        , "article_click": 20
+                        , "article_type": false
+                        , "article_up": true
+                        , "article_support": false
+                        // , "chry": "赖良 姜军 史小军 李渝 等等 赖良 姜军 史小军 李渝 等等 赖良 姜军 史小军 李渝 等等 赖良 姜军 史小军 李渝 等等"
+                    },
+                    
+                ]
+                // , skin: 'line' //表格风格
+                , even: true
+                , page: true //是否显示分页
+                //,limits: [5, 7, 10]
+                , limit: 10 //每页默认显示的数量
+            });
+            //监听锁定操作
+            // form.on('checkbox(lockDemo)', function (obj) {
+            //     layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
+            // });
+            //监听工具条
+            table.on('tool(test-table-data)', function (obj) {
+                var data = obj.data;
+                // console.log(data);
+                // console.log(obj)
+                if (obj.event === 'edit') {
+                    // layer.alert('跳到会议类型编辑页面id=' + data.id)
+                    var url = './editMeet.html'
+                    var index = layer.open({
+                        type: 2,
+                        // title: name+'--状态详情',
+                        title: "编辑--" + data.name,
+                        shadeClose: true,
+                        move: true,
+                        
+                        area: ['900px', '500px'],
+                        maxmin: true,
+                        content: [url]
+                    })
+                    layer.full(index);
+                } else if (obj.event === 'del') {
+                    layer.confirm('确定删除：' + data.name, function (index) {
+                        if (data.id !== null) {
+                            // console.log('------------' + data.id);
+                            $.ajax({
+                                url: './del',
+                                method: 'post',
+                                data: data,
+                                shade: 0.8,
+                                dataType: 'JSON',
+                                success: function (res) {
+                                    if (res.code == 0) {
+                                        layer.confirm('删除成功！', function (index) {
+                                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                            // layer.close(index);
+                                            parent.location.reload();
+
+                                        })
+
+                                        // parent.location.reload();//刷新父页面，注意一定要在关闭当前iframe层之前执行刷新
+                                        // parent.layer.close(index); //再执行关闭
+                                    }
+                                },
+                                error: function (res) {
+                                    layer.alert('无法联通服务器错误代码:' + res.status + '错误描述:' + res.statusText);
+                                }
+
+                            })
+
+                        }
+                        // console.log(index)
+
+                        // obj.del();
+                        // layer.close(index);
+                    })
+
+                }
+
+            });
+
+            var active = {
+                AddArticle: function () { //获取选中数据
+                    var url = './addMeet.html'
+                    var index = layer.open({
+                        type: 2,
+                        // title: name+'--详情',
+                        title: "添加文章",
+                        shadeClose: true,
+                        shade: 0.8,
+                        move: true,
+                        area: ['900px', '500px'],
+                        content: [url],
+                        maxmin: true
+                    })
+                    layer.full(index);
+
+                },
+            };
+            $('.test-table-data-btn .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+
+                active[type] ? active[type].call(this) : '';
+            });
+
+        });
+    </script>
+</body>
+
+</html>
