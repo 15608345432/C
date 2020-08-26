@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../assets/libs/layuiadmin/style/admin.css" media="all">
     <link rel="stylesheet" href="../assets/css/login.css">
 </head>
+
 <body>
 
     <div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login" style="display: none;">
@@ -18,7 +19,7 @@
                 <h2>个人博客</h2>
                 <p style="color: red;"></p>
             </div>
-            <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+            <div id="LAY-user-login" class="layadmin-user-login-box layadmin-user-login-body layui-form">
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-username"
                         for="LAY-user-login-username"></label>
@@ -48,7 +49,8 @@
                     </div>
                 </div> -->
                 <div class="layui-form-item">
-                    <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="LAY-user-login-submit">登 入</button>
+                    <button class="layui-btn layui-btn-fluid" id="LAY-user-login-submit" lay-submit
+                        lay-filter="LAY-user-login-submit">登 入</button>
                 </div>
             </div>
         </div>
@@ -56,56 +58,76 @@
     <script src="../assets/libs/layuiadmin/layui/layui.js"></script>
     <script src="../assets/libs/config.js"></script>
     <script>
-        layui.config({
-            base: '../assets/libs/layuiadmin/' //静态资源所在路径
-        }).extend({
-            index: 'lib/index' //主入口模块
-        }).use(['index', 'sample', 'form'], function () {
-            var $ = layui.$
-                , setter = layui.setter
-                , admin = layui.admin
-                , form = layui.form
-                , router = layui.router()
-                , search = router.search;
-                var link1 = serverName + "/index.php/login/login";
-            form.render();
-            //提交
-            form.on('submit(LAY-user-login-submit)', function (obj) {
-                alert(layui.setter.base);
-                 console.log(obj.field);
-                //请求登入接口
-                admin.req({
-                    url: link1 //实际使用请改成服务端真实接口
-                    , data: obj.field
-                    , done: function (res) {
+        layui
+            .config({
+                base: '../assets/libs/layuiadmin/' //静态资源所在路径
+            })
+            .extend({
+                index: 'lib/index' //主入口模块
+            })
+            .use(['index', 'sample', 'form'], function () {
+                var $ = layui.$
+                    , setter = layui.setter
+                    , admin = layui.admin
+                    , form = layui.form
+                    , router = layui.router()
+                    , search = router.search;
+                var link1 = serverName + "/index.php/login";
+                form.render();
+                //提交
+                form.on('submit(LAY-user-login-submit)', function (obj) {
+                    // console.log(layui.setter.base);
+                    // console.log(setter.tableName);
+                    // console.log(setter.request.tokenName);
 
-                        //请求成功后，写入 access_token
-                        // layui.data(setter.tableName, {
-                        //     key: setter.request.tokenName
-                        //     , value: res.data.access_token
-                        // });
+                    //  console.log(obj.field);
+                    var lastTime = new Date().getTime();
+                    //请求登入接口
+                    admin.req({
+                        url: link1 //实际使用请改成服务端真实接口
+                        , data: obj.field
+                        , done: function (res) {
+                            console.info(res)
+                            layui.sessionData(setter.tableName, {
+                                key: "data"
+                                , value: [{
+                                    'token': res.data.token
+                                }, {
+                                    'user': res.data.user
+                                }, {
+                                    'lastTime': lastTime
+                                }
+                                ]
+                            });
+                            // window.data = res.data.token;
+                            window.data = res.data.user;
+                            //登入成功的提示与跳转
+                            layer.msg('登入成功', {
+                                offset: '15px'
+                                , icon: 1
+                                , time: 1000
+                            }, function () {
+                                location.href = '../'; //后台主页
+                            });
 
-                        //登入成功的提示与跳转
-                        layer.msg('登入成功', {
-                            offset: '15px'
-                            , icon: 1
-                            , time: 1000
-                        }, function () {
-                            location.href = '../'; //后台主页
-                        });
+                        }
+
+                    });
+
+                });
+                $("#LAY-user-login").keydown(function (e) {
+                    if (e.keyCode === 13) {
+                        $("#LAY-user-login-submit").trigger("click");
                     }
                 });
 
-            });
+                // //实际使用时记得删除该代码
+                // layer.msg('为了方便演示，用户名密码可随意输入', {
+                //     offset: '15px'
+                //     , icon: 1
+                // });
 
-
-            // //实际使用时记得删除该代码
-            // layer.msg('为了方便演示，用户名密码可随意输入', {
-            //     offset: '15px'
-            //     , icon: 1
-            // });
-
-        })
+            })
     </script>
 </body>
 

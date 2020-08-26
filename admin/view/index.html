@@ -56,7 +56,7 @@
         </li>
         <li class="layui-nav-item" lay-unselect>
           <a href="javascript:;">
-            <cite>系统管理员</cite>
+            <cite><script id="demo" type="text/html">{{d.name}}</script></cite>
           </a>
           <dl class="layui-nav-child">
             <dd><a lay-href="set/user/info.html">基本资料</a></dd>
@@ -165,8 +165,76 @@
       base: './assets/libs/layuiadmin/' //静态资源所在路径
     }).extend({
       index: 'lib/index' //主入口模块
-    }).use('index');
-  </script>
-</body>
+    }).use('index','setter', function () {
+      var $ = layui.$
+        , setter = layui.setter
+        , laytpl = layui.laytpl;
+      // window.data=userinfo;
+      // window.data = {
+      //   "id": 1, "user_name": "张三", "user_age": 18, "user_phone": "12345678910"
+      //   , "user_qq": "12312313", "user_email": "12312313@qq.com", "user_address": "", "user_mark": 0, "user_image_url": "", "token": ""
+      // };
+      //第三步：渲染模版
+      //  console.log(layui.sessionData('layuiAdmin').data[0]['token'])
 
-</html>
+      $(document).ready(function () {
+        // 如果会话性存储 数据为空，返回登录界面
+        if (layui.sessionData(setter.tableName) === {}) {
+          location.href = '/login/index.html'; //登录主页
+        } else {
+          // 如果会话性存储data键为空
+          if (layui.sessionData(setter.tableName).data != null) {
+            // 如果会话性存储data键第一个键token为空
+            if (layui.sessionData(setter.tableName).data[0]['token'] === '') {
+              // 返回到登录界面
+              location.href = '/login/index.html'; //登录主页
+            }
+          }
+          // 返回登录界面
+          else {
+            location.href = '/login/index.html'; //登录主页
+          }
+        }
+      });
+
+
+      var lastTime = new Date().getTime();
+      var currentTime = new Date().getTime();
+      // var timeOut = 30 * 60 * 1000; //设置超时时间： 30分
+      var timeOut = 15 * 60 * 1000; //设置超时时间： 15分
+
+      // window.onload = function () {
+      //   window.document.onmousedown = function () {
+      //     localStorage.setItem("lastTime", lastTime);//new Date().getTime());
+      //   }
+      // };
+
+      function checkTimeout() {
+        currentTime = new Date().getTime(); //更新当前时间
+        // lastTime = localStorage.getItem("lastTime");
+        // console.log(currentTime);
+        // console.log(lastTime);
+        // console.log(currentTime - lastTime);
+        // console.log(timeOut);
+        if (currentTime - lastTime > timeOut) { //判断是否超时
+          console.log("超时");
+          location.href = '/login/index.html'; //登录页面
+        }
+      }
+
+      /* 定时器 间隔30秒检测是否长时间未操作页面 */
+      window.setInterval(checkTimeout, 1000 * 30);
+
+      var data2 = { //数据
+        "name": layui.sessionData(setter.tableName).data[1]["user"].user_name
+      }
+      var getTpl = demo.innerHTML
+        , view = document.getElementById('view');
+      laytpl(getTpl).render(data2, function (html) {
+        view.innerHTML = html;
+      });
+    });
+    </script>
+  </body>
+  
+  </html>
